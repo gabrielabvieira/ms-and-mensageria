@@ -1,6 +1,6 @@
 spring:
   application:
-    name: msclopudgateway
+    name: mscloudgateway
   cloud:
     gateway:
       discovery:
