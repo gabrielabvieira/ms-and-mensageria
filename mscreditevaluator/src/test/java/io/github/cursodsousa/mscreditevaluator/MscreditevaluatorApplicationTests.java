@@ -1,4 +1,4 @@
-package io.github.sursodsousa.mscreditevaluator;
+package io.github.cursodsousa.mscreditevaluator;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
