@@ -1,7 +1,10 @@
 package io.github.cursodsousa.mscreditevaluator.application;
 
+import io.github.cursodsousa.mscreditevaluator.application.ex.CommunicationErrorMicroservicesException;
+import io.github.cursodsousa.mscreditevaluator.application.ex.DataClientNotFoundException;
 import io.github.cursodsousa.mscreditevaluator.domain.model.ClientSituation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +23,15 @@ public class CreditEvaluatorController {
         return"ok";
     }
     @GetMapping(value = "situacao-cliente", params = "cpf")
-    public ResponseEntity<ClientSituation> consultaClientSituation(@RequestParam("cpf") String cpf) {
-        ClientSituation clientSituation = creditEvaluatorService.obterClientSituation(cpf);
-        return ResponseEntity.ok(clientSituation);
+    public ResponseEntity consultaClientSituation(@RequestParam("cpf") String cpf) {
+        try {
+            ClientSituation clientSituation = creditEvaluatorService.obterClientSituation(cpf);
+            return ResponseEntity.ok(clientSituation);
+        } catch (DataClientNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (CommunicationErrorMicroservicesException e) {
+            return ResponseEntity.status(HttpStatus.resolve(e.getStatus())).body(e.getMessage());
+        }
 
     }
 }
