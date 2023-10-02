@@ -2,7 +2,7 @@ package io.github.cursodsousa.mscreditevaluator.application;
 
 import io.github.cursodsousa.mscreditevaluator.domain.model.ClientSituation;
 import io.github.cursodsousa.mscreditevaluator.domain.model.DataClient;
-import io.github.cursodsousa.mscreditevaluator.clients.ClientControllerClient;
+import io.github.cursodsousa.mscreditevaluator.infra.clients.ClientControllerClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

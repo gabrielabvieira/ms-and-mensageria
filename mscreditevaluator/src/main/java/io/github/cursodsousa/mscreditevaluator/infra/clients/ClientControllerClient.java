@@ -1,4 +1,4 @@
-package io.github.cursodsousa.mscreditevaluator.clients;
+package io.github.cursodsousa.mscreditevaluator.infra.clients;
 
 import io.github.cursodsousa.mscreditevaluator.domain.model.DataClient;
 import org.springframework.cloud.openfeign.FeignClient;
