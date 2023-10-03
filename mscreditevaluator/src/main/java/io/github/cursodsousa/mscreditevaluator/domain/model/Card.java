@@ -2,10 +2,13 @@ package io.github.cursodsousa.mscreditevaluator.domain.model;
 
 import lombok.Data;
 
-@Data
+import java.math.BigDecimal;
 
-public class DataClient {
+@Data
+public class Card {
     private Long id;
     private String nome;
-    private Integer idade;
+    private String bandeira;
+    private BigDecimal limiteBasico;
+
 }

@@ -1,6 +1,7 @@
 package io.github.cursodsousa.mscreditevaluator.infra.clients;
 
 
+import io.github.cursodsousa.mscreditevaluator.domain.model.Card;
 import io.github.cursodsousa.mscreditevaluator.domain.model.ClientCard;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -14,4 +15,7 @@ public interface CardsControllerClient {
 
     @GetMapping(params = "cpf")
     ResponseEntity<List<ClientCard>> getCartoesByCliente(@RequestParam("cpf") String cpf);
+
+    @GetMapping(params = "renda")
+    ResponseEntity<List<Card>> getCartoesRendaAteh(@RequestParam("renda") Long renda);
 }
