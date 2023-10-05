@@ -1,10 +1,9 @@
 package io.github.cursodsousa.mscreditevaluator.application;
 
+import io.github.cursodsousa.mscreditevaluator.application.ex.CardRequestErrorException;
 import io.github.cursodsousa.mscreditevaluator.application.ex.CommunicationErrorMicroservicesException;
 import io.github.cursodsousa.mscreditevaluator.application.ex.DataClientNotFoundException;
-import io.github.cursodsousa.mscreditevaluator.domain.model.AssessmentData;
-import io.github.cursodsousa.mscreditevaluator.domain.model.ClientSituation;
-import io.github.cursodsousa.mscreditevaluator.domain.model.ReturnAssessmentClient;
+import io.github.cursodsousa.mscreditevaluator.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ public class CreditEvaluatorController {
         return"ok";
     }
     @GetMapping(value = "situacao-cliente", params = "cpf")
-    public ResponseEntity consultaClientSituation(@RequestParam("cpf") String cpf) {
+    public ResponseEntity consultarClientSituation(@RequestParam("cpf") String cpf) {
         try {
             ClientSituation clientSituation = creditEvaluatorService.obterClientSituation(cpf);
             return ResponseEntity.ok(clientSituation);
@@ -44,6 +43,16 @@ public class CreditEvaluatorController {
             return ResponseEntity.notFound().build();
         } catch (CommunicationErrorMicroservicesException e) {
             return ResponseEntity.status(HttpStatus.resolve(e.getStatus())).body(e.getMessage());
+        }
+    }
+    @PostMapping("solicitacoes-cartao")
+    public ResponseEntity solicitarCartao(@RequestBody CardIssuanceRequestData data){
+        try{
+            ProtocoloRequestCard protocoloRequestCard = creditEvaluatorService
+                    .cardIssuanceResquest(data);
+            return ResponseEntity.ok(protocoloRequestCard);
+        }catch (CardRequestErrorException e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 }

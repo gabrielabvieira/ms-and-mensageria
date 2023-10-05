@@ -1,11 +1,13 @@
 package io.github.cursodsousa.mscreditevaluator.application;
 
 import feign.FeignException;
+import io.github.cursodsousa.mscreditevaluator.application.ex.CardRequestErrorException;
 import io.github.cursodsousa.mscreditevaluator.application.ex.CommunicationErrorMicroservicesException;
 import io.github.cursodsousa.mscreditevaluator.application.ex.DataClientNotFoundException;
 import io.github.cursodsousa.mscreditevaluator.domain.model.*;
 import io.github.cursodsousa.mscreditevaluator.infra.clients.CardsControllerClient;
 import io.github.cursodsousa.mscreditevaluator.infra.clients.ClientControllerClient;
+import io.github.cursodsousa.mscreditevaluator.infra.mqueue.CardIssuanceRequestPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +24,7 @@ public class CreditEvaluatorService {
 
     private final ClientControllerClient clientesClient;
     private final CardsControllerClient cartoesClient;
+    private final CardIssuanceRequestPublisher cardIssuancePublisher;
 
     public ClientSituation obterClientSituation(String cpf)
             throws DataClientNotFoundException, CommunicationErrorMicroservicesException {
@@ -80,6 +84,17 @@ public class CreditEvaluatorService {
                 throw new DataClientNotFoundException();
             }
             throw new CommunicationErrorMicroservicesException(e.getMessage(), status);
+        }
+    }
+    public  ProtocoloRequestCard cardIssuanceResquest(CardIssuanceRequestData data){
+        try{
+            cardIssuancePublisher.requestCard(data);
+            var protocolo = UUID.randomUUID().toString();
+            return new ProtocoloRequestCard(protocolo);
+
+        }catch (Exception e){
+            throw new CardRequestErrorException(e.getMessage());
+
         }
     }
 }
